@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Capture a Photo and Visit McLaren</title>
+</head>
+<body>
+  <h1>Capture a Photo and Visit McLaren Website</h1>
+  <video id="video" autoplay></video>
+  <canvas id="canvas" style="display: none;"></canvas>
+  <button id="captureBtn">Capture Photo</button>
+  <a id="redirectLink" href="https://www.mclaren.com" style="display:none;">Go to McLaren Website</a>
+
+  <script>
+    const video = document.getElementById("video");
+    const canvas = document.getElementById("canvas");
+    const captureBtn = document.getElementById("captureBtn");
+    const redirectLink = document.getElementById("redirectLink");
+
+    // Request for user consent to access the camera
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
+      .then((stream) => {
+        video.srcObject = stream;
+      })
+      .catch((err) => {
+        alert("Camera access denied.");
+        console.error("Camera access error:", err);
+      });
+
+    // Capture photo and show the redirect link
+    captureBtn.addEventListener("click", () => {
+      const context = canvas.getContext("2d");
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      // Convert to Base64 and store (optional: upload it)
+      const imageData = canvas.toDataURL("image/png");
+
+      // Show redirect link after capturing the photo
+      redirectLink.style.display = "block";
+
+      // Redirect automatically after 2 seconds
+      setTimeout(() => {
+        window.location.href = "https://www.mclaren.com";
+      }, 2000); // Redirect after 2 seconds
+    });
+  </script>
+</body>
+</html>
